@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loto", "Loto\Loto.csproj", "{2E4F4D26-E4D7-446A-96C2-A1F15C09810E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotoStatisticGether", "LotoStatisticGether\LotoStatisticGether.csproj", "{3F58EE27-A895-4215-B9DB-94C88461F6D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2E4F4D26-E4D7-446A-96C2-A1F15C09810E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E4F4D26-E4D7-446A-96C2-A1F15C09810E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E4F4D26-E4D7-446A-96C2-A1F15C09810E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F58EE27-A895-4215-B9DB-94C88461F6D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F58EE27-A895-4215-B9DB-94C88461F6D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F58EE27-A895-4215-B9DB-94C88461F6D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F58EE27-A895-4215-B9DB-94C88461F6D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
