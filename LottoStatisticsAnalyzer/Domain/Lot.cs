@@ -6,8 +6,12 @@ namespace LottoStatisticsAnalyzer
 {
     public class Lot
     {
-        public List<Drop> Drops { get; set; }
-
-        public DateTime Date { get; set; }
+        public Lot(DateTime date, List<Drop> drops)
+        {
+            Date = date;
+            Drops = drops;
+        }
+        public DateTime Date { get; private set; }
+        public List<Drop> Drops { get; private set; }
     }
 }

@@ -57,13 +57,17 @@
   <ItemGroup>
     <Compile Include="Domain\Drop.cs" />
     <Compile Include="Domain\Lot.cs" />
+    <Compile Include="Managers\LotsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Managers\" />
+    <ProjectReference Include="..\LotoStatisticGether\LotoStatisticGether.csproj">
+      <Project>{3f58ee27-a895-4215-b9db-94c88461f6d8}</Project>
+      <Name>LotoStatisticGether</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

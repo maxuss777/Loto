@@ -9,7 +9,8 @@ namespace Loto
 {
     public class Program
     {
-        private static List<Result> _results = new List<Result>();
+        private static List<HistoryResult> _results = new List<HistoryResult>();
+        private static HistoryHelper _historyHelper = new HistoryHelper();
 
         static void Main()
         {
@@ -22,7 +23,7 @@ namespace Loto
             }
             finally
             {
-                LogsHelper.Log(_results.ToJson());
+                _historyHelper.Log(_results.ToJson());
             }
         }
 
@@ -51,7 +52,7 @@ namespace Loto
                             .ToArray();
                         var date = GetDate(webElementDate.Text);
 
-                        _results.Add(new Result(lot, date));
+                        _results.Add(new HistoryResult { Lot = lot, Date = date });
                     }
                     catch (Exception exc)
                     {
@@ -69,13 +70,16 @@ namespace Loto
             }
         }
 
-        private static string GetDate(string date)
+        private static DateTime GetDate(string date)
         {
             var d = date.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var monthName = d[1].Trim();
+            var day = d[0];
+            var year = d[2];
 
-            var month = d[1].Trim();
+            var monthInt = ((int)Enum.Parse(typeof(Months), monthName)).ToString();
 
-            return date.Replace($" {month} ", $"/{((int)Enum.Parse(typeof(Months), d[1])).ToString()}/");
+            return DateTime.Parse($"{year}-{monthInt}-{day}");
         }
     }
 }

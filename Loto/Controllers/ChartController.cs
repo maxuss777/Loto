@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
+using LottoStatisticsAnalyzer.Managers;
 
 namespace Loto.Controllers
 {
     public class ChartController : Controller
     {
+        private LotsManager _lotsManager;
+        public ChartController()
+        {
+            _lotsManager = new LotsManager();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -12,19 +20,17 @@ namespace Loto.Controllers
 
         public JsonResult GetHistory()
         {
-            var history = new object[] {
-                new {date = "10/01/2013",drop =10 },
-                new {date ="10/02/2013",drop = 1 },
-                new {date = "10/03/2013",drop = 22 },
-                new {date = "10/04/2013",drop =10 },
-                new {date ="10/05/2013",drop = 21 },
-                new {date = "10/06/2013",drop = 26 },
-                new {date = "10/07/2013",drop =3 },
-                new {date ="10/08/2013",drop = 21 },
-                new {date = "10/09/2013",drop = 15 },
-                };
+            var history = _lotsManager.GetAllLots();
+            var response = history
+                .Skip(890)
+                .Take(300)
+                .OrderBy(d=>d.Date)
+                .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
+            {
+                return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Value };
+            });
 
-            return Json(history, JsonRequestBehavior.AllowGet);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

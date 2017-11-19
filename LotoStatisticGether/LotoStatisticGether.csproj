@@ -68,9 +68,9 @@
   <ItemGroup>
     <Compile Include="Helpers\DriverAdaptor.cs" />
     <Compile Include="Init.cs" />
-    <Compile Include="Helpers\LogsHelper.cs" />
+    <Compile Include="Helpers\HistoryHelper.cs" />
     <Compile Include="Models\Months.cs" />
-    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\HistoryResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

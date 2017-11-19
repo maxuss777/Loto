@@ -44,7 +44,7 @@ chart.addListener("dataUpdated", zoomChart);
 
 function getChartData() {
     $.ajax({
-        url: "Chart/GetHistory",
+        url: "Loto/Chart/GetHistory",
         async: false,
         success: function (response) {
             $.each(response, function (i, value) {

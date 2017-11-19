@@ -3,7 +3,7 @@ namespace LotoStatisticGether.Models
 {
     public enum Months
     {
-        січня,
+        січня = 1,
         лютого,
         березня,
         квітня,
