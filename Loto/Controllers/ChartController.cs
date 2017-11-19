@@ -22,8 +22,6 @@ namespace Loto.Controllers
         {
             var history = _lotsManager.GetAllLots();
             var response = history
-                .Skip(890)
-                .Take(300)
                 .OrderBy(d=>d.Date)
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
             {
