@@ -8,16 +8,16 @@ namespace LotoStatisticGether.Models
 {
     public class Result
     {
-        private readonly string[] _lot;
+        private readonly int[] _lot;
         private readonly string _date;
 
-        public Result(string[] lot, string date)
+        public Result(int[] lot, string date)
         {
             _lot = lot;
             _date = date;
         }
 
-        public string[] Lot
+        public int[] Lot
         {
             get
             {

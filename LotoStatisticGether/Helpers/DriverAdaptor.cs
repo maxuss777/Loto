@@ -193,8 +193,19 @@ namespace Loto
             {
                 for (var i = 1; i < 4; i++)
                 {
-                    element = Driver.Wait.Until(
-                        dr => dr.FindElement(by));
+                    element = Driver.Wait.Until(dr =>
+                    {
+                        try
+                        {
+                            return dr.FindElement(by);
+                        }
+                        catch (Exception)
+                        {
+                            return element;
+                            throw;
+                        }
+
+                    });
 
                     if (element != null)
                     {
