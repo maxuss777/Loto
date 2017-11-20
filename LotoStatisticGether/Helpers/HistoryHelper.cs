@@ -24,6 +24,7 @@ namespace Loto
         public List<HistoryResult> GetHistoryResults()
         {
             var history = File.ReadAllText(_resultFilePath);
+
             return JsonSerializer.DeserializeFromString<List<HistoryResult>>(history);
         }
     }

@@ -29,7 +29,7 @@ var chart = AmCharts.makeChart("chartdiv", {
         lineColor: "#b5030d",
         negativeLineColor: "#0352b5",
         hideBulletsCount: 30,
-        balloonText: "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b><br><b>[[text]]</b>"
+        balloonText: "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b><br><b>[[diff]]</b>"
     }],
     chartCursor: {
         fullWidth: true,
@@ -59,7 +59,7 @@ function getData(position) {
                 chartData.push({
                     date: date,
                     drop: value.drop,
-                    text: "Some Test text"
+                    diff: value.diff
                 });
             });
         },

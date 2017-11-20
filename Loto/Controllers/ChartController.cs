@@ -22,12 +22,12 @@ namespace Loto.Controllers
         [HttpGet]
         public JsonResult GetHistory(int index)
         {
-            var history = _lotsManager.GetAllLots();
+            var history = _lotsManager.GetAllLots(index);
             var response = history
                 .OrderBy(d=>d.Date)
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
             {
-                return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[index].Value };
+                return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[index].Value, diff = h.Drops[index].Diff };
             });
 
             return Json(response, JsonRequestBehavior.AllowGet);

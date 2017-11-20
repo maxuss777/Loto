@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Loto;
-using LotoStatisticGether.Models;
+using LottoStatisticsAnalyzer.Domain;
 using System.Linq;
+using LotoStatisticGether.Models;
+using System;
 
 namespace LottoStatisticsAnalyzer.Managers
 {
@@ -14,18 +16,58 @@ namespace LottoStatisticsAnalyzer.Managers
             _historyHelper = new HistoryHelper();
         }
 
-        public List<Lot> GetAllLots()
+        public List<Lot> GetAllLots(int index)
         {
-            var historyResults = _historyHelper.GetHistoryResults();
+            var historyResults = _historyHelper
+                .GetHistoryResults()
+                .OrderByDescending(hist => hist.Date)
+                .ToList();
 
-            return historyResults.Select(historyResult =>
+            var result = new List<Lot>();
+            var length = historyResults.Count;
+            for (int i = 0; i < length; i++)
             {
-                return new Lot(
-                    historyResult.Date,
-                    historyResult.Lot
-                    .Select(drop => new Domain.Drop { Value = drop })
-                    .ToList());
-            }).ToList();
+                int diffInPersents = 0;
+                if (length - i > 3)
+                {
+                    diffInPersents = GetDifference(index, historyResults[i], historyResults[i + 1], historyResults[i + 2]);
+                }
+
+                result.Add(new Lot(
+                    historyResults[i].Date,
+                    historyResults[i].Lot
+                    .Select(drop => new Drop { Value = drop, Diff = diffInPersents })
+                    .ToList()));
+            }
+            return result;
+        }
+
+        private int GetDifference(int position, HistoryResult current, HistoryResult previous, HistoryResult last)
+        {
+            var currentValue = current.Lot[position];
+            var previousValue = previous.Lot[position];
+            var lastValue = last.Lot[position];
+
+            double curentMinusPrevious = Math.Abs(currentValue - previousValue);
+            double previousMinusLast = Math.Abs(previousValue - lastValue);
+
+            if (curentMinusPrevious == 0 || previousMinusLast == 0)
+            {
+                return 0;
+            }
+
+            var result = curentMinusPrevious > previousMinusLast ?
+                Convert.ToInt32((previousMinusLast / curentMinusPrevious) * 100) :
+                Convert.ToInt32((curentMinusPrevious / previousMinusLast) * 100);
+
+            if (curentMinusPrevious > previousMinusLast &&
+                ((lastValue > previousValue && lastValue > currentValue) ||
+                (lastValue < previousValue && lastValue < currentValue)))
+            {
+                return 100 - result;
+            }
+
+            return result;
         }
     }
 }
