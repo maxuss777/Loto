@@ -1,7 +1,9 @@
 ﻿var chartData = [];
-this.getChartData();
+this.getData(0);
+
 var chart = AmCharts.makeChart("chartdiv", {
     type: "serial",
+    theme: "dark",
     language: "eu",
     dataProvider: this.chartData,
     categoryField: "date",
@@ -27,14 +29,16 @@ var chart = AmCharts.makeChart("chartdiv", {
         lineColor: "#b5030d",
         negativeLineColor: "#0352b5",
         hideBulletsCount: 30,
-        balloonText: "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b>"
+        balloonText: "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b><br><b>[[text]]</b>"
     }],
     chartCursor: {
         fullWidth: true,
-        cursorAlpha: 0.1
+        cursorAlpha: 0.5,
+        valueLineEnabled: true,
+        valueLineBalloonEnabled: true
     },
     chartScrollbar: {
-        scrollbarHeight: 40,
+        scrollbarHeight: 80,
         color: "#FFFFFF",
         autoGridCount: true,
         graph: "g1"
@@ -42,21 +46,31 @@ var chart = AmCharts.makeChart("chartdiv", {
 });
 chart.addListener("dataUpdated", zoomChart);
 
-function getChartData() {
+function getData(position) {
+
+    var data = { index : position };
     $.ajax({
         url: "Loto/Chart/GetHistory",
+        data: data,
         async: false,
         success: function (response) {
             $.each(response, function (i, value) {
                 var date = new Date(value.date);
                 chartData.push({
                     date: date,
-                    drop: value.drop
+                    drop: value.drop,
+                    text: "Some Test text"
                 });
             });
         },
         datatype: 'json'
     });
+}
+
+function setData(position)
+{
+    this.getData(position);
+    chart.validateData();
 }
 
 function zoomChart() {
