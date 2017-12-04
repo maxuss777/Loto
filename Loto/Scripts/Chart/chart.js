@@ -89,3 +89,25 @@ function setPanSelect() {
     }
     chart.validateNow();
 }
+
+function switchToDifferanceOnly()
+{
+    var data = { index: 1 };
+    $.ajax({
+        url: "Loto/Chart/GetDiffs",
+        data: data,
+        async: false,
+        success: function (response) {
+            $.each(response, function (i, value) {
+                var date = new Date(value.date);
+                chartData.push({
+                    date: date,
+                    drop: value.drop
+                });
+            });
+        },
+        datatype: 'json'
+    });
+
+    chart.validateData();
+}

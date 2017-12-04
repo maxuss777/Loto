@@ -6,6 +6,6 @@ namespace LottoStatisticsAnalyzer.Domain
         public int Value { get; set; }
         public int Next { get; set; }
         public int Previous { get; set; }
-        public int Diff { get; set; }
+        public double Diff { get; set; }
     }
 }

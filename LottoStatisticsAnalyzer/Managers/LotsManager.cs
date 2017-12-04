@@ -27,7 +27,7 @@ namespace LottoStatisticsAnalyzer.Managers
             var length = historyResults.Count;
             for (int i = 0; i < length; i++)
             {
-                int diffInPersents = 0;
+                double diffInPersents = 0;
                 if (length - i > 3)
                 {
                     diffInPersents = GetDifference(index, historyResults[i], historyResults[i + 1], historyResults[i + 2]);
@@ -42,7 +42,30 @@ namespace LottoStatisticsAnalyzer.Managers
             return result;
         }
 
-        private int GetDifference(int position, HistoryResult current, HistoryResult previous, HistoryResult last)
+        public List<Diff> GetOnlyDiffs(int index)
+        {
+            var historyResults = _historyHelper
+                .GetHistoryResults()
+                .OrderByDescending(hist => hist.Date)
+                .ToList();
+
+            var result = new List<Diff>();
+            var length = historyResults.Count;
+            for (int i = 0; i < length; i++)
+            {
+                double diffInPersents = 0;
+                if (length - i > 3)
+                {
+                    diffInPersents = GetDifference(index, historyResults[i], historyResults[i + 1], historyResults[i + 2]);
+                }
+
+                result.Add(new Diff(historyResults[i].Date, Math.Round(diffInPersents, 4)));
+            }
+
+            return result;
+        }
+
+        private double GetDifference(int position, HistoryResult current, HistoryResult previous, HistoryResult last)
         {
             var currentValue = current.Lot[position];
             var previousValue = previous.Lot[position];
@@ -56,16 +79,10 @@ namespace LottoStatisticsAnalyzer.Managers
                 return 0;
             }
 
-            var result = curentMinusPrevious > previousMinusLast ?
-                Convert.ToInt32((previousMinusLast / curentMinusPrevious) * 100) :
-                Convert.ToInt32((curentMinusPrevious / previousMinusLast) * 100);
+            var result = curentMinusPrevious / previousMinusLast;
 
-            if (curentMinusPrevious > previousMinusLast &&
-                ((lastValue > previousValue && lastValue > currentValue) ||
-                (lastValue < previousValue && lastValue < currentValue)))
-            {
-                return 100 - result;
-            }
+            if (result > 1)
+                result = 1 - previousMinusLast / curentMinusPrevious;
 
             return result;
         }
