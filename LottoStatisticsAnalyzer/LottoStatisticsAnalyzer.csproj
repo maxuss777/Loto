@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Diff.cs" />
     <Compile Include="Domain\Drop.cs" />
     <Compile Include="Domain\Lot.cs" />
     <Compile Include="Managers\LotsManager.cs" />

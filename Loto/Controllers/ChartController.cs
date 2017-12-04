@@ -24,11 +24,26 @@ namespace Loto.Controllers
         {
             var history = _lotsManager.GetAllLots(index);
             var response = history
-                .OrderBy(d=>d.Date)
+                .OrderBy(d => d.Date)
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
             {
                 return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[index].Value, diff = h.Drops[index].Diff };
             });
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetDiffs(int index)
+        {
+            var diffs = _lotsManager.GetOnlyDiffs(index).Skip(0).Take(300);
+            var response = diffs
+                .OrderBy(d => d.Percents)
+                .Where(d => d.Percents > 0)
+                .Select<LottoStatisticsAnalyzer.Domain.Diff, object>(d =>
+                  {
+                      return new { date = d.Date.ToString("yyyy-MM-dd"), drop = d.Percents };
+                  });
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
