@@ -11,7 +11,7 @@ namespace Loto
         private string _resultFilePath;
         public HistoryHelper()
         {
-            _resultFilePath = @"C:\source\repos\Loto\LotoStatisticGether\Results\lots.txt";
+            _resultFilePath = System.AppDomain.CurrentDomain.RelativeSearchPath + "\\Results\\lots.txt";
         }
 
         public void Log(string info)

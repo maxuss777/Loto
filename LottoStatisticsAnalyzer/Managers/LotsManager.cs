@@ -42,29 +42,6 @@ namespace LottoStatisticsAnalyzer.Managers
             return result;
         }
 
-        public List<Diff> GetOnlyDiffs(int index)
-        {
-            var historyResults = _historyHelper
-                .GetHistoryResults()
-                .OrderByDescending(hist => hist.Date)
-                .ToList();
-
-            var result = new List<Diff>();
-            var length = historyResults.Count;
-            for (int i = 0; i < length; i++)
-            {
-                double diffInPersents = 0;
-                if (length - i > 3)
-                {
-                    diffInPersents = GetDifference(index, historyResults[i], historyResults[i + 1], historyResults[i + 2]);
-                }
-
-                result.Add(new Diff(historyResults[i].Date, Math.Round(diffInPersents, 4)));
-            }
-
-            return result;
-        }
-
         private double GetDifference(int position, HistoryResult current, HistoryResult previous, HistoryResult last)
         {
             var currentValue = current.Lot[position];

@@ -50,7 +50,7 @@ function getData(position) {
 
     var data = { index : position };
     $.ajax({
-        url: "Loto/Chart/GetHistory",
+        url: "Chart/GetHistory",
         data: data,
         async: false,
         success: function (response) {
@@ -94,7 +94,7 @@ function switchToDifferanceOnly()
 {
     var data = { index: 1 };
     $.ajax({
-        url: "Loto/Chart/GetDiffs",
+        url: "Chart/GetDiffs",
         data: data,
         async: false,
         success: function (response) {
