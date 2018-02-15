@@ -1,5 +1,4 @@
-﻿var chartData = [];
-this.getData(0);
+﻿var chartData = this.getData(0);
 
 var chart = AmCharts.makeChart("chartdiv", {
     type: "serial",
@@ -47,8 +46,8 @@ var chart = AmCharts.makeChart("chartdiv", {
 chart.addListener("dataUpdated", zoomChart);
 
 function getData(position) {
-
-    var data = { index : position };
+    var data = { index: position };
+    var chData = [];
     $.ajax({
         url: "Chart/GetHistory",
         data: data,
@@ -56,7 +55,7 @@ function getData(position) {
         success: function (response) {
             $.each(response, function (i, value) {
                 var date = new Date(value.date);
-                chartData.push({
+                chData.push({
                     date: date,
                     drop: value.drop,
                     diff: value.diff
@@ -65,11 +64,13 @@ function getData(position) {
         },
         datatype: 'json'
     });
+
+    return chData;
 }
 
 function setData(position)
 {
-    this.getData(position);
+    chart.dataProvider = this.getData(position);
     chart.validateData();
 }
 
@@ -87,27 +88,30 @@ function setPanSelect() {
     } else {
         chartCursor.pan = true;
     }
-    chart.validateNow();
+    chart.validateData();
 }
 
 function switchToDifferanceOnly()
 {
     var data = { index: 1 };
+    var chData = [];
     $.ajax({
-        url: "Chart/GetDiffs",
+        url: "Chart/GetDiffOnly",
         data: data,
         async: false,
         success: function (response) {
             $.each(response, function (i, value) {
                 var date = new Date(value.date);
-                chartData.push({
+                chData.push({
                     date: date,
-                    drop: value.drop
+                    drop: value.drop,
+                    diff: 0
                 });
             });
         },
         datatype: 'json'
     });
 
+    chart.dataProvider = chData;
     chart.validateData();
 }

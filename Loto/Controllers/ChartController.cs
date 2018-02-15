@@ -39,12 +39,21 @@ namespace Loto.Controllers
         {
             var history = _lotsManager.GetAllLots(0);
             var response = history
-                .OrderByDescending(d => d.Date)
+                .OrderBy(d => d.Date)
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
                 {
-                    return new { h.Drops[0].Diff };
+                    return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
+                    //return new { h.Drops[0].Diff };
                 })
-                .Take(250);
+                .Skip(936);
+            
+            //.Take(250);
+
+            //var grouped = response.GroupBy(e => e.Diff).Select(g=> 
+            //{
+            //    return new { Value = g.Key, Count = g.Count() };
+            //})
+            //.OrderBy(g=>g.Count);
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
