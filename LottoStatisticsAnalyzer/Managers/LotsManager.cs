@@ -61,7 +61,7 @@ namespace LottoStatisticsAnalyzer.Managers
             if (result > 1)
                 result = 1 + previousMinusLast / curentMinusPrevious;
 
-            return Math.Round(result, 2);
+            return Math.Round(result, 1);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Loto.Controllers
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h => //LottoStatisticsAnalyzer.Domain.Drop>(h =>
                 {
                     return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
-                    //return h.Drops[0];
+                    //return h.Drops[0].Diff;
                 })
                 .Skip(936);
             

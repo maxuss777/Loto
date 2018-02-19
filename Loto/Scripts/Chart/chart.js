@@ -91,7 +91,7 @@ function setPanSelect() {
     chart.validateData();
 }
 
-function switchToDifferanceOnly()
+function switchToDifferenceOnly()
 {
     var data = { index: 1 };
     var chData = [];
