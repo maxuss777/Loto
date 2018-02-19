@@ -40,10 +40,10 @@ namespace Loto.Controllers
             var history = _lotsManager.GetAllLots(0);
             var response = history
                 .OrderBy(d => d.Date)
-                .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
+                .Select<LottoStatisticsAnalyzer.Lot, object>(h => //LottoStatisticsAnalyzer.Domain.Drop>(h =>
                 {
                     return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
-                    //return new { h.Drops[0].Diff };
+                    //return h.Drops[0];
                 })
                 .Skip(936);
             
