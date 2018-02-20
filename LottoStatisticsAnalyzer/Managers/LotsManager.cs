@@ -58,10 +58,12 @@ namespace LottoStatisticsAnalyzer.Managers
 
             var result = curentMinusPrevious / previousMinusLast;
 
-            if (result > 1)
-                result = 1 + previousMinusLast / curentMinusPrevious;
+            //if (result > 1)
+              //  result = 1 - previousMinusLast / curentMinusPrevious;
 
-            return Math.Round(result, 1);
+            //return Math.Round(result, 2);
+
+            return curentMinusPrevious;
         }
     }
 }
