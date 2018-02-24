@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LottoStatisticsAnalyzer.Managers;
@@ -40,12 +41,14 @@ namespace Loto.Controllers
             var history = _lotsManager.GetAllLots(0);
             var response = history
                 .OrderBy(d => d.Date)
-                .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
+                .Select<LottoStatisticsAnalyzer.Lot, Array>(h =>
                 {
-                    return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
+                    //return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
                     //return new { h.Drops[0].Diff };
-                })
-                .Skip(936);
+
+                    return h.Drops.Select(d=>d.Value).ToArray();
+                });
+                //.Skip(936);
             
             //.Take(250);
 
