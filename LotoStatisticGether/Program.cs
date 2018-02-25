@@ -23,7 +23,7 @@ namespace Loto
             }
             finally
             {
-                _historyHelper.Log(_results.ToJson());
+                _historyHelper.Log(_results);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Loto
                     break;
                 }
 
-                DriverAdaptor.Instance.FindElement(By.XPath(".//li[@class='next']")).Click();
+                DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next > a")).Click();
             }
         }
 

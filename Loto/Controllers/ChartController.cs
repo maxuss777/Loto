@@ -35,7 +35,7 @@ namespace Loto.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetDiffOnly(int position)
+        public JsonResult GetDiffOnly(int position=0)
         {
             var history = _lotsManager.GetAllLots(position);
             var response = history
@@ -43,13 +43,13 @@ namespace Loto.Controllers
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h => //LottoStatisticsAnalyzer.Domain.Drop>(h =>
                 {
                     //return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[0].Diff };
-                    return h.Drops[0].Diff;
-
+                    //return h.Drops[0].Diff;
+                    return h.Drops.Select(d => d.Value).ToArray();
                     //return new { drop = h.Drops[0].Value, diff = h.Drops[0].Diff };
-                })
+                });
                 //.Skip(936);
             
-            .Take(100);
+            //.Take(100);
 
             var grouped = response.GroupBy(e => e).Select(g=> 
             {
@@ -57,7 +57,7 @@ namespace Loto.Controllers
             })
                 .OrderBy(g => g.Count);
 
-            return Json(grouped, JsonRequestBehavior.AllowGet);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -3,27 +3,42 @@ using System.Configuration;
 using System.IO;
 using ServiceStack.Text;
 using System.Collections.Generic;
+using ServiceStack;
+using System;
 
 namespace Loto
 {
     public class HistoryHelper
     {
-        private string _resultFilePath;
+        private string _resultFilePath1;
+        private string _resultFilePath2;
         public HistoryHelper()
         {
-            _resultFilePath = System.AppDomain.CurrentDomain.RelativeSearchPath + "\\Results\\lots.txt";
+            var currentDate = DateTime.Today.ToString("MM-dd-yyyy");
+            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_{currentDate}.txt";
+            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_{currentDate}.txt";
         }
 
-        public void Log(string info)
+        public void Log(List<HistoryResult> result)
         {
-            var file = new FileInfo(_resultFilePath);
-            file.Directory.Create();
-            File.WriteAllText(file.FullName, info);
+            var file1 = new FileInfo(_resultFilePath1);
+            file1.Directory.Create();
+            File.WriteAllText(file1.FullName, result.ToJson());
+
+            var file2 = new FileInfo(_resultFilePath2);
+            file2.Directory.Create();
+            using (var writer = new StreamWriter(file2.FullName))
+            {
+                foreach(var res in result)
+                {
+                    writer.WriteLine(res.Lot.ToJson());
+                }
+            }
         }
 
         public List<HistoryResult> GetHistoryResults()
         {
-            var history = File.ReadAllText(_resultFilePath);
+            var history = File.ReadAllText(_resultFilePath1);
 
             return JsonSerializer.DeserializeFromString<List<HistoryResult>>(history);
         }
