@@ -20,7 +20,7 @@ namespace Loto.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetHistory(int index)
+        public ActionResult GetHistory(int index)
         {
             var history = _lotsManager.GetAllLots(index);
             var response = history
@@ -28,8 +28,8 @@ namespace Loto.Controllers
                 .Select<LottoStatisticsAnalyzer.Lot, object>(h =>
             {
                 return new { date = h.Date.ToString("yyyy-MM-dd"), drop = h.Drops[index].Value, diff = h.Drops[index].Diff };
-            })
-            .Skip(936);
+            });
+            //.Skip(936);
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }

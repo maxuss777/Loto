@@ -14,9 +14,8 @@ namespace Loto
         private string _resultFilePath2;
         public HistoryHelper()
         {
-            var currentDate = DateTime.Today.ToString("MM-dd-yyyy");
-            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_{currentDate}.txt";
-            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_{currentDate}.txt";
+            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_10-22-2019.txt";
+            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_10-22-2019.txt";
         }
 
         public void Log(List<HistoryResult> result)
