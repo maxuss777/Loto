@@ -34,7 +34,7 @@ namespace LottoStatisticsAnalyzer.Managers
                 }
 
                 result.Add(new Lot(
-                    historyResults[i].Date,
+                    DateTime.Parse(historyResults[i].Date),
                     historyResults[i].Balls
                     .Select(drop => new Drop { Value = drop, Diff = diffInPersents })
                     .ToList()));

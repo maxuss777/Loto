@@ -42,15 +42,16 @@ namespace Loto
                     _results.Add(new HistoryResult { Id = GetId(archiveResultDetails), Date = GetDate(archiveResult), Balls = GetBalls(archiveResultDetails) });
                 }
 
-                if (IsNextButtonvisible())
+                if (IsNextButtonHidden())
                 {
+                    _historyHelper.Log(_results);
                     DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next > a")).Click();
                 }
             }
-            while (IsNextButtonvisible());
+            while (IsNextButtonHidden());
         }
 
-        private static bool IsNextButtonvisible()
+        private static bool IsNextButtonHidden()
         {
             var nextButton = DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next.hidden"));
 
@@ -69,7 +70,7 @@ namespace Loto
             return int.Parse(replaced);
         }
 
-        private static DateTime GetDate(IWebElement archiveResult)
+        private static string GetDate(IWebElement archiveResult)
         {
             var webValue = archiveResult.FindElement(By.ClassName("archive_result-date"));
             var d = webValue.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -79,7 +80,7 @@ namespace Loto
 
             var monthInt = ((int)Enum.Parse(typeof(Months), monthName)).ToString();
 
-            return DateTime.Parse($"{year}-{monthInt}-{day}");
+            return $"{year}-{monthInt}-{day}";
         }
 
         private static IReadOnlyList<int> GetBalls(IWebElement archiveResultDetails)

@@ -13,7 +13,7 @@ namespace Loto
         private string _resultFilePath2;
         public HistoryHelper()
         {
-            var date = DateTime.Now.ToString("dd_mm_yyyy");
+            var date = DateTime.Now.ToString("yyyy_MM_dd");
             _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_{date}.txt";
             _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_{date}.txt";
         }
