@@ -1,7 +1,4 @@
-﻿let data = [];
-this.getData(0);
-
-am4core.ready(function () {
+﻿am4core.ready(function () {
 
     // Themes begin
     am4core.useTheme(am4themes_animated);
@@ -70,52 +67,3 @@ am4core.ready(function () {
 
 
 });
-
-//function getData(position) {
-//    var data = { index: position };
-//    var chData = [];
-//    $.ajax({
-//        url: "Loto/Chart/GetHistory",
-//        data: data,
-//        async: false,
-//        success: function (response) {
-//            $.each(response, function (i, value) {
-//                var date = new Date(value.date);
-//                chData.push({
-//                    date: date,
-//                    drop: value.drop,
-//                    diff: value.diff
-//                });
-//            });
-//        },
-//        datatype: 'json'
-//    });
-
-//    return chData;
-//};
-
-function getData(position) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-            if (xmlhttp.status == 200) {
-                var array = JSON.parse(xmlhttp.responseText);
-                array.forEach(function (obj, index) {
-                    data.push({
-                        date: obj.date,
-                        drop: obj.drop
-                    });
-                });
-            }
-            else if (xmlhttp.status == 400) {
-                alert('There was an error 400');
-            }
-            else {
-                alert('something else other than 200 was returned');
-            }
-        }
-    };
-
-    xmlhttp.open("GET", "http://localhost:50139/Chart/GetHistory?index=" + position, true);
-    xmlhttp.send();
-}

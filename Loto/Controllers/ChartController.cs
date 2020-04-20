@@ -16,6 +16,7 @@ namespace Loto.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            var r = new Random();
             return View();
         }
 

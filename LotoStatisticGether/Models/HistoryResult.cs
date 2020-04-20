@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LotoStatisticGether.Models
 {
     [Serializable]
     public class HistoryResult
     {
-        public HistoryResult() { }
-
-        public int[] Lot { get; set; }
-        
+        public int Id { get; set; }
         public DateTime Date { get; set; }
+        public IReadOnlyList<int> Balls { get; set; }
     }
 }

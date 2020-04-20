@@ -35,7 +35,7 @@ namespace LottoStatisticsAnalyzer.Managers
 
                 result.Add(new Lot(
                     historyResults[i].Date,
-                    historyResults[i].Lot
+                    historyResults[i].Balls
                     .Select(drop => new Drop { Value = drop, Diff = diffInPersents })
                     .ToList()));
             }
@@ -44,9 +44,9 @@ namespace LottoStatisticsAnalyzer.Managers
 
         private double GetDifference(int position, HistoryResult current, HistoryResult previous, HistoryResult last)
         {
-            var currentValue = current.Lot[position];
-            var previousValue = previous.Lot[position];
-            var lastValue = last.Lot[position];
+            var currentValue = current.Balls[position];
+            var previousValue = previous.Balls[position];
+            var lastValue = last.Balls[position];
 
             double curentMinusPrevious = Math.Abs(currentValue - previousValue);
             double previousMinusLast = Math.Abs(previousValue - lastValue);

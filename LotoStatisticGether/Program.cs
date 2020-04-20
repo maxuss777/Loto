@@ -4,6 +4,7 @@ using LotoStatisticGether.Models;
 using ServiceStack;
 using System;
 using System.Linq;
+using OpenQA.Selenium.Support.UI;
 
 namespace Loto
 {
@@ -17,9 +18,10 @@ namespace Loto
             try
             {
                 Init.InitiateDriver();
-                DriverAdaptor.Instance.GoToUrl("http://msl.ua/uk/megalot/archive");
-                //DriverAdaptor.Instance.Wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(".//button[@class='yes']"))).Click();
-                GetSattistic();
+                DriverAdaptor.Instance.GoToUrl("https://igra.msl.ua/megalote/uk/archive");
+                DriverAdaptor.Instance.Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > div.modal-is18-wrapper.popup.popup-adult.is18wrap > " +
+                    "div > div > div.wrapp-button > button.ripple.is18-yes-btn.yep.yes"))).Click();
+                ParseHistoryResult();
             }
             finally
             {
@@ -27,52 +29,50 @@ namespace Loto
             }
         }
 
-        private static void GetSattistic()
+        private static void ParseHistoryResult()
         {
-            bool isEnough = false;
-            for (; ; )
+            do
             {
-                for (var j = 2; j < 12; j++)
+                var archiveResultItems = DriverAdaptor.Instance.FindElements(By.ClassName("archive_results-item"));
+                for (int i = 0; i < archiveResultItems.Count; i++)
                 {
-                    var pathToLot = $"body > section > div > div > div:nth-child({j}) > div.span10 > div:nth-child(2)";
-                    var pathToDate = $"body > section > div > div > div:nth-child({j}) > div.span2";
-                    IWebElement webElementLot = null;
-                    IWebElement webElementDate = null;
-                    try
-                    {
-                        webElementLot = DriverAdaptor.Instance.FindElementWithWait(By.CssSelector(pathToLot));
-                        webElementDate = DriverAdaptor.Instance.FindElementWithWait(By.CssSelector(pathToDate));
+                    var archiveResult = archiveResultItems[i];
+                    var archiveResultDetails = archiveResult.FindElement(By.ClassName("archive_result-details"));
 
-                        var lot = webElementLot
-                            .Text
-                            .Replace(" + мегакулька: ", ",")
-                            .Replace("Результати ", string.Empty)
-                            .Split(',')
-                            .Select<string, int>(i=>Int32.Parse(i))
-                            .ToArray();
-                        var date = GetDate(webElementDate.Text);
-
-                        _results.Add(new HistoryResult { Lot = lot, Date = date });
-                    }
-                    catch (Exception exc)
-                    {
-                        Console.Out.Write(exc.Message);
-                        isEnough = true;
-                        break;
-                    }
-                }
-                if (isEnough)
-                {
-                    break;
+                    _results.Add(new HistoryResult { Id = GetId(archiveResultDetails), Date = GetDate(archiveResult), Balls = GetBalls(archiveResultDetails) });
                 }
 
-                DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next > a")).Click();
+                if (IsNextButtonvisible())
+                {
+                    DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next > a")).Click();
+                }
             }
+            while (IsNextButtonvisible());
         }
 
-        private static DateTime GetDate(string date)
+        private static bool IsNextButtonvisible()
         {
-            var d = date.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var nextButton = DriverAdaptor.Instance.FindElement(By.CssSelector("#yw0 > li.next.hidden"));
+
+            return nextButton == null;
+        }
+
+        private static int GetId(IWebElement archiveResultDetails)
+        {
+            var archiveResultBalls = archiveResultDetails.FindElement(By.ClassName("archive_result-number"));
+            var innerText = archiveResultBalls.Text;
+
+            var replaced = innerText
+                .Replace("Тираж", "")
+                .Trim();
+
+            return int.Parse(replaced);
+        }
+
+        private static DateTime GetDate(IWebElement archiveResult)
+        {
+            var webValue = archiveResult.FindElement(By.ClassName("archive_result-date"));
+            var d = webValue.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var monthName = d[1].Trim();
             var day = d[0];
             var year = d[2];
@@ -80,6 +80,23 @@ namespace Loto
             var monthInt = ((int)Enum.Parse(typeof(Months), monthName)).ToString();
 
             return DateTime.Parse($"{year}-{monthInt}-{day}");
+        }
+
+        private static IReadOnlyList<int> GetBalls(IWebElement archiveResultDetails)
+        {
+            var archiveResultBalls = archiveResultDetails.FindElement(By.ClassName("archive_result-balls"));
+            var innerText = archiveResultBalls.Text;
+            var replaced = innerText
+                .Replace("Результати\r\n", "")
+                .Replace("+ Мегакулька\r\n", "")
+                .Replace("\r\n", ",")
+                .Trim()
+                .Split(',')
+                .Select(k => int.Parse(k))
+                .ToList()
+                .AsReadOnly();
+
+            return replaced;
         }
     }
 }

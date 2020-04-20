@@ -1,5 +1,4 @@
 ﻿using LotoStatisticGether.Models;
-using System.Configuration;
 using System.IO;
 using ServiceStack.Text;
 using System.Collections.Generic;
@@ -14,8 +13,9 @@ namespace Loto
         private string _resultFilePath2;
         public HistoryHelper()
         {
-            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_10-22-2019.txt";
-            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_10-22-2019.txt";
+            var date = DateTime.Now.ToString("dd_mm_yyyy");
+            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_{date}.txt";
+            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_{date}.txt";
         }
 
         public void Log(List<HistoryResult> result)
@@ -30,7 +30,7 @@ namespace Loto
             {
                 foreach(var res in result)
                 {
-                    writer.WriteLine(res.Lot.ToJson());
+                    writer.WriteLine(res.Balls.ToJson());
                 }
             }
         }
