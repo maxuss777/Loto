@@ -28,7 +28,7 @@ namespace Loto
             file2.Directory.Create();
             using (var writer = new StreamWriter(file2.FullName))
             {
-                foreach(var res in result)
+                foreach (var res in result)
                 {
                     writer.WriteLine(res.Balls.ToJson());
                 }
@@ -37,7 +37,8 @@ namespace Loto
 
         public List<HistoryResult> GetHistoryResults()
         {
-            var history = File.ReadAllText(_resultFilePath1);
+            var getPath = "C:\\Results\\lots.txt";
+            var history = File.ReadAllText(getPath);
 
             return JsonSerializer.DeserializeFromString<List<HistoryResult>>(history);
         }
