@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loto.UI", "Loto\Loto.UI.csproj", "{2E4F4D26-E4D7-446A-96C2-A1F15C09810E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotoStatisticGether", "LotoStatisticGether\LotoStatisticGether.csproj", "{3F58EE27-A895-4215-B9DB-94C88461F6D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottoStatisticsAnalyzer", "LottoStatisticsAnalyzer\LottoStatisticsAnalyzer.csproj", "{789C3A67-74C5-4AF4-B2FD-77D17D3F7F96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotoStatisticGether.v2", "LotoStatisticGether.v2\LotoStatisticGether.v2.csproj", "{F5A130EF-8100-4694-991E-B19B74416F41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{789C3A67-74C5-4AF4-B2FD-77D17D3F7F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{789C3A67-74C5-4AF4-B2FD-77D17D3F7F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{789C3A67-74C5-4AF4-B2FD-77D17D3F7F96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A130EF-8100-4694-991E-B19B74416F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A130EF-8100-4694-991E-B19B74416F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A130EF-8100-4694-991E-B19B74416F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A130EF-8100-4694-991E-B19B74416F41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
