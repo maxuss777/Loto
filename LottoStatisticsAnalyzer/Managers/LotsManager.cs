@@ -20,7 +20,6 @@ namespace LottoStatisticsAnalyzer.Managers
         {
             var historyResults = _historyHelper
                 .GetHistoryResults()
-                .OrderByDescending(hist => hist.Date)
                 .ToList();
 
             var result = new List<Lot>();

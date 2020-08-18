@@ -4,43 +4,38 @@ using ServiceStack.Text;
 using System.Collections.Generic;
 using ServiceStack;
 using System;
+using System.Linq;
 
 namespace Loto
 {
     public class HistoryHelper
     {
-        private string _resultFilePath1;
-        private string _resultFilePath2;
-        public HistoryHelper()
-        {
-            var date = DateTime.Now.ToString("yyyy_MM_dd");
-            _resultFilePath1 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lots_{date}.txt";
-            _resultFilePath2 = System.AppDomain.CurrentDomain.RelativeSearchPath + $"\\Results\\lotsAsArray_{date}.txt";
-        }
-
         public void Log(List<HistoryResult> result)
         {
-            var file1 = new FileInfo(_resultFilePath1);
-            file1.Directory.Create();
-            File.WriteAllText(file1.FullName, result.ToJson());
-
-            var file2 = new FileInfo(_resultFilePath2);
-            file2.Directory.Create();
-            using (var writer = new StreamWriter(file2.FullName))
+            string resultFolderPath = System.IO.Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + "\\Result";
+            if (!System.IO.Directory.Exists(resultFolderPath))
             {
+                System.IO.Directory.CreateDirectory(resultFolderPath);
+            }
+
+            var file = new FileInfo(resultFolderPath + "\\" + DateTime.Now.ToString("yyyy_MM_dd") + ".txt");
+            using (var writer = new StreamWriter(file.FullName))
+            {
+                writer.WriteLine("[");
                 foreach (var res in result)
                 {
-                    writer.WriteLine(res.Balls.ToJson());
+                    writer.WriteLine(res.ToJson()+",");
                 }
+                writer.WriteLine("]");
             }
         }
 
         public List<HistoryResult> GetHistoryResults()
         {
-            var getPath = "C:\\Results\\lots.txt";
-            var history = File.ReadAllText(getPath);
+            var report = System.IO.Directory.GetFiles(System.AppDomain.CurrentDomain.BaseDirectory.ParentDirectory() + "\\Result").First();
+            var history = File.ReadAllText(report);
 
-            return JsonSerializer.DeserializeFromString<List<HistoryResult>>(history);
+            return JsonSerializer.DeserializeFromString<List<HistoryResult>>(history).Where(e => e != null).ToList();
         }
     }
 }

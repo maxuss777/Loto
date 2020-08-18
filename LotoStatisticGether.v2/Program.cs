@@ -1,36 +1,76 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HtmlAgilityPack;
+using Loto;
+using LotoStatisticGether.Models;
+using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace LotoStatisticGether.v2
 {
     public class Program
     {
-        private static readonly HttpClient _client = new HttpClient();
-
         static void Main()
         {
-            MainAsync().GetAwaiter().GetResult();
+            var sid = "ojfi8200ej2arhmi8l49k35vp1";
+            var token = "VHpKfmNPNk1iSFlCY34wVzk5aGt3YVRvRlM4Q0llXzhBSGY6aR62_V2MEzP3dcUncqZe7YOqIX2WSh7Nhk2iuw==";
+
+            var client = new RestClient("https://igra.msl.ua/megalote/uk/slide-aside");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+
+            request.AddParameter("registrationPopup", "close", ParameterType.Cookie);
+            request.AddParameter("is18", "true", ParameterType.Cookie);
+            request.AddParameter("tutorialMillionaire", "seen", ParameterType.Cookie);
+            request.AddParameter("lotteryCode", "000", ParameterType.Cookie);
+            request.AddParameter("gravitecOptInBlocked", "true", ParameterType.Cookie);
+
+            request.AddParameter("sid", sid, ParameterType.Cookie);
+
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            int start = 1316;
+            int end = 1979;
+
+            List<HistoryResult> result = new List<HistoryResult>();
+            for (int i = start; i <= end; i++)
+            {
+                request.AddOrUpdateParameter("application/x-www-form-urlencoded; charset=UTF-8", $"YII_CSRF_TOKEN={token}&drawID={i}", ParameterType.RequestBody);
+                IRestResponse response = client.Execute(request);
+                string source = WebUtility.HtmlDecode(response.Content);
+                HtmlDocument html = new HtmlDocument();
+                html.LoadHtml(source);
+
+                HtmlNode date = html
+                    .DocumentNode
+                    .Descendants()
+                    .Where(x => x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("results_slider"))
+                    .First();
+
+                List<int> balls = html.DocumentNode.Descendants()
+                    .Where(x => x.Name == "span" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("ball-number"))
+                    .Select(x => int.Parse(x.InnerHtml)).ToList();
+
+                result.Add(new HistoryResult { Id = i, Date = GetDate(date), Balls = balls });
+
+                Console.Clear();
+                Console.WriteLine(result.Count);
+            }
+
+            new HistoryHelper().Log(result);
         }
 
-        private static async Task MainAsync()
+        private static string GetDate(HtmlNode date)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://igra.msl.ua//megalote/uk/slide-aside");
+            var webValue = date.InnerText.Replace('\n', ' ').Trim();
+            var d = webValue.Substring(3).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var monthName = d[1].Trim();
+            var day = d[0].Trim();
+            var year = d[2];
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "megalote/uk/slide-aside");
-            request.Content = new StringContent("YII_CSRF_TOKEN=NXpaWWJaaFdvWVIzTER6VTB4OEE0OXYwYnVoTHRGOEjVgpptoSFSsCuOt5V64Pqw3hzflGDfg1sN76A6MN-V6w%3D%3D&drawID=1975",
-                                                Encoding.UTF8,
-                                                "application/x-www-form-urlencoded");
+            var monthInt = ((int)Enum.Parse(typeof(Months), monthName)).ToString();
 
-            
-            request.Headers.Host = "igra.msl.ua";
-            request.Headers.Add("Cookie", "_gcl_au=1.1.1561254622.1595959461; _ga=GA1.2.1571770125.1595959461; registrationPopup=close; is18=true; GN_USER_ID_KEY=c88e6455-854d-40f4-bca9-92debbdba6d0; loyalUser=null; tutorialMillionaire=seen; sid=15p5bdg3ken05jsd8b3g8f31m4; lotteryCode=000; _gid=GA1.2.1945938776.1597168178; GN_SESSION_ID_KEY=b3c192b3-3634-4499-a6c0-e17fbb4d87d1; gravitecOptInBlocked=true");
-
-            HttpResponseMessage response = await client.SendAsync(request);
+            return $"{year}-{monthInt}-{day}";
         }
     }
 }
